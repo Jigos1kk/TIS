@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "jwks": "node scripts/jwks.js"
   },
   "keywords": [],
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "dotenv": "^18.0.9",
     "express": "^5.3.0",
@@ -23,7 +24,9 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.6",
+    "@types/oidc-provider": "^9.13.1",
     "cors": "^2.8.6",
+    "oidc-provider": "^9.13.3",
     "reflect-metadata": "^0.2.2"
   }
 }

@@ -1,8 +1,8 @@
-import { initializeDatabase } from "./database"
+import { initDatabase } from "./database"
 import { initServer } from "./server";
 
 const bootstrap = async () => {
-    await initializeDatabase();
+    await initDatabase();
     await initServer();
 }
 

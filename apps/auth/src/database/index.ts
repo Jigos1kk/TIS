@@ -1,11 +1,10 @@
 import "reflect-metadata";
 import { env } from "../config/env"
 import { DataSource } from "typeorm";
-// import { User } from "../entity/User";
 
 const options = env.dbOptions;
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
   type: "postgres",
   host: options.host || "localhost",
   port: options.port || 5432,
@@ -19,7 +18,7 @@ export const AppDataSource = new DataSource({
   subscribers: [],
 });
 
-export async function initializeDatabase() {
+export async function initDatabase() {
   try {
     await AppDataSource.initialize();
     console.log("Database connection established successfully");

@@ -7,7 +7,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "jwks": "node scripts/jwks.js"
+    "jwks": "node scripts/jwks.js",
+    "cookies": "node scripts/cookies.js"
   },
   "keywords": [],
   "type": "module",

@@ -1,6 +1,7 @@
 import "dotenv/config"
 
 export const env = {
+    node: process.env.NODE_ENV || 'development',
     port: Number(process.env.PORT),
     clientOption: {
         url: String(process.env.CLIENT_URL)

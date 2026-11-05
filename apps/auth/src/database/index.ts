@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { env } from "../config/env"
 import { DataSource } from "typeorm";
+import { User } from "./entity/User.entity"
 
 const options = env.dbOptions;
 
@@ -13,7 +14,7 @@ const AppDataSource = new DataSource({
   database: options.database || "tis_database",
   synchronize: true, 
   logging: true,
-  entities: [],
+  entities: [User],
   migrations: [],
   subscribers: [],
 });

@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
-import routes from "./routes";
+import routes from "./routes/index.js";
 import Provider from "oidc-provider";
+import { errorMiddleware } from "./middlewares/error.middleware.js";
 
-import { env } from "./config/env";
+import { env } from "./config/env.js";
 
 const server = express();
 const port = env.port;
@@ -23,6 +24,7 @@ if(env.node == "development") {
 }
 
 server.use('/', routes);
+server.use(errorMiddleware);
 
 export const initServer = (): void => {
     server.listen(port, () => {

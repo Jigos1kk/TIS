@@ -1,11 +1,11 @@
 import "reflect-metadata";
-import { env } from "../config/env"
+import { env } from "../config/env.js"
 import { DataSource } from "typeorm";
-import { User } from "./entity/User.entity"
+import { User } from "./entity/User.entity.js"
 
 const options = env.dbOptions;
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: "postgres",
   host: options.host || "localhost",
   port: options.port || 5432,

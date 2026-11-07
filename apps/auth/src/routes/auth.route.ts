@@ -1,10 +1,17 @@
-import { Router } from "express";
-import { authController } from "../controllers/auth.controller.js";
-import { validateBody } from "../middlewares/validation.middleware.js";
-import { registerMiddleware } from "../middlewares/auth.middleware.js";
+import { Router } from 'express';
+import { AuthController } from '../controllers/auth.controller.js';
 
-const router = Router();
+// Configures REST endpoints for auth operations
+export function createAuthRouter(authController: AuthController): Router {
+  const router = Router();
 
-router.post("/register", registerMiddleware, authController.register);
+  router.post('/register', authController.register);
+  router.post('/login', authController.login);
+  router.get('/email-confirmation', authController.confirmEmail);
+  router.post('/password-reset/request', authController.requestPasswordReset);
+  router.post('/password-reset/confirm', authController.confirmPasswordReset);
 
-export default router;
+  return router;
+}
+
+export default createAuthRouter;

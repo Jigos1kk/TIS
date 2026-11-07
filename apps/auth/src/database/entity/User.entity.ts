@@ -1,11 +1,8 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm"
-import * as crypto from "node:crypto"
+import { BaseEntity } from './base.entity';
 
 @Entity()
-export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
-
+export class User extends BaseEntity {
     @Column({ type: "varchar", length: 36, unique: true})
     @Index()
     sub: string;

@@ -1,25 +1,41 @@
-import type { RegisterInput, RegisterOutput } from "../../validator/user.validator.js";
+import { z } from 'zod';
 
-const REGISTRATION_STATUSES = {
-  PENDING: 'pending',
-  ACTIVE: 'active',
-  SUSPENDED: 'suspended',
-  BANNED: 'banned',
-  FAILED: 'failed'
-} as const;
+export const RegisterDeviceSchema = z.object({
+  fingerprint: z.string().min(1),
+  hardwareId: z.string().min(1),
+  userId: z.number(),
+});
 
-export type RegistrationStatus = typeof REGISTRATION_STATUSES[keyof typeof REGISTRATION_STATUSES];
+export type RegisterDeviceInput = z.infer<typeof RegisterDeviceSchema>;
 
-export type ReqRegisterDto = RegisterOutput;
-export type RegisterInputDto = RegisterInput;
-export type RegisterDto = ReqRegisterDto;
+export const RegisterUserSchema = z.object({
+  username: z.string().min(3),
+  email: z.string().email(),
+  password: z.string().min(8),
+  firstName: z.string().min(1).default('User'),
+  lastName: z.string().optional(),
+  displayName: z.string().optional(),
+});
 
-export class ResRegisterDto {
-  public sub!: string;
-  public email!: string;
-  public verification_expires_in!: number;
+export type RegisterUserInput = z.infer<typeof RegisterUserSchema>;
+export type ReqRegisterDto = RegisterUserInput;
 
-  constructor(partial: Partial<ResRegisterDto>) {
-    Object.assign(this, partial);
-  }
-}
+export const AuthenticateSchema = z.object({
+  login: z.string().min(1),
+  password: z.string().min(1),
+});
+
+export type AuthenticateInput = z.infer<typeof AuthenticateSchema>;
+
+export const RequestPasswordResetSchema = z.object({
+  email: z.string().email(),
+});
+
+export type RequestPasswordResetInput = z.infer<typeof RequestPasswordResetSchema>;
+
+export const ConfirmPasswordResetSchema = z.object({
+  token: z.string().min(1),
+  newPassword: z.string().min(8),
+});
+
+export type ConfirmPasswordResetInput = z.infer<typeof ConfirmPasswordResetSchema>;

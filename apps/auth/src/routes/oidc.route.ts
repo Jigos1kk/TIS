@@ -1,28 +1,18 @@
-import { Router } from 'express'
-import { env } from "../config/env";
-import { loadJWKS, loadCookies } from "../providers";
+import { Router } from 'express';
+import { OidcController } from '../controllers/oidc.controller.js';
 import Provider from 'oidc-provider';
 
-const router = Router();
-const port = env.port;
+// Mounts OIDC provider middleware and interaction routes
+export function createOidcRouter(provider: Provider, oidcController: OidcController): Router {
+  const router = Router();
 
-const oidc = new Provider(`http://localhost:${port}/oauth`, {
-    jwks: await loadJWKS(),
-    clients: [
-        {
-            client_id: 'my-client',
-            client_secret: 'my-secret',
-            redirect_uris: ['http://localhost:3001/callback'],
-            response_types: ['code'],
-            grant_types: ['authorization_code'],
-        },
-    ],
-    cookies: await loadCookies(),
-    features: {
-        devInteractions: { enabled: true },
-    },
-});
+  router.get('/interaction/:uid', oidcController.renderInteraction);
+  router.post('/interaction/:uid/login', oidcController.submitLogin);
 
-router.use("/", oidc.callback())
+  // Mounts all standard OpenID Connect endpoints
+  router.use('/', provider.callback());
 
-export default router
+  return router;
+}
+
+export default createOidcRouter;

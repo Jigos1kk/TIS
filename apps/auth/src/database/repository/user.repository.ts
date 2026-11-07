@@ -1,55 +1,22 @@
-import { BaseRepository } from "./base.repository.js"; // Путь к вашему базовому репозиторию
-import { User } from "../entity/User.entity.js";
+import { Repository } from 'typeorm';
+import { User } from '../../database/entity/User.entity';
+import { BaseRepository } from '../../database/repository/base.repository';
 
-export interface UserData {
-  sub: string;
-  username: string;
-  usernameNormalize: string;
-  email: string;
-  emailNormalize: string;
-  firstName: string;
-  lastName?: string;
-  displayName: string;
-  locale?: string;
-  timezone?: string;
-  passwordHash: string;
-  salt: string;
-  isActive?: boolean;
-  isEmailVerified?: boolean;
-}
-
+// Repository for User entity
 export class UserRepository extends BaseRepository<User> {
-  constructor() {
-    // Передаем класс сущности в базовый конструктор
-    super(User); 
+  constructor(repository: Repository<User>) {
+    super(repository);
   }
 
-  // --- Специфичные методы для User ---
-
-  async findBySub(sub: string): Promise<User | null> {
-    // Используем базовый метод findOneBy
-    return this.findOneBy({ sub });
+  async findByEmail(email: string): Promise<User | null> {
+    return this.repository.findOne({ where: { email } });
   }
 
   async findByEmailNormalize(emailNormalize: string): Promise<User | null> {
-    return this.findOneBy({ emailNormalize });
+    return this.repository.findOne({ where: { emailNormalize } });
   }
 
   async findByUsernameNormalize(usernameNormalize: string): Promise<User | null> {
-    return this.findOneBy({ usernameNormalize });
-  }
-
-  async findByEmailOrUsername(emailNormalize: string, usernameNormalize: string): Promise<User | null> {
-    return this.repo
-      .createQueryBuilder("user")
-      .where("user.emailNormalize = :emailNormalize", { emailNormalize })
-      .orWhere("user.usernameNormalize = :usernameNormalize", { usernameNormalize })
-      .getOne();
-  }
-
-  async createUser(userData: UserData): Promise<User> {
-    return this.create(userData as any); 
+    return this.repository.findOne({ where: { usernameNormalize } });
   }
 }
-
-export const userRepository = new UserRepository();

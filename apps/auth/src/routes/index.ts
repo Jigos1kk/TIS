@@ -1,12 +1,26 @@
 import { Router } from "express";
 import systemRoutes from "./system.route.js";
-import oidcRoutes from "./oidc.route.js";
-import authRoutes from "./auth.route.js";
+import { createOidcRouter } from "./oidc.route.js";
+import { createAuthRouter } from "./auth.route.js";
+import { createDeviceRouter } from "./device.route.js";
+import { AuthController } from "../controllers/auth.controller.js";
+import { DeviceController } from "../controllers/device.controller.js";
+import { OidcController } from "../controllers/oidc.controller.js";
+import Provider from "oidc-provider";
 
-const routes = Router();
+// Mounts all application routers into a single entry point
+export function createRouter(
+  provider: Provider,
+  authController: AuthController,
+  deviceController: DeviceController,
+  oidcController: OidcController
+): Router {
+  const router = Router();
 
-routes.use("/", systemRoutes);
-routes.use("/auth", authRoutes);
-routes.use("/oauth", oidcRoutes);
+  router.use("/", systemRoutes);
+  router.use("/api/auth", createAuthRouter(authController));
+  router.use("/api/devices", createDeviceRouter(deviceController));
+  router.use("/oidc", createOidcRouter(provider, oidcController));
 
-export default routes;
+  return router;
+}

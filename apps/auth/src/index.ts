@@ -1,16 +1,23 @@
-import { initDatabase } from "./database"
-import { initServer } from "./server";
+import { initDatabase } from './database/index.js';
+import { createContainer } from './container.js';
+import { createApp } from './app.js';
+import { env } from './config/env.js';
 
-const bootstrap = async () => {
-    await initDatabase();
-    await initServer();
+// Application entry point: initializes DB, DI container and starts HTTP server
+async function main(): Promise<void> {
+  await initDatabase();
+
+  const container = createContainer();
+  const app = createApp(container);
+
+  const port = env.port || 3000;
+  app.listen(port, () => {
+    console.log(`Server started on http://localhost:${port}`);
+    console.log(`OIDC Discovery URL: http://localhost:${port}/oidc/.well-known/openid-configuration`);
+  });
 }
 
-bootstrap()
-    .then(() => {
-        console.log("Application started successfully");
-    })
-    .catch((err) => {
-        console.error("Error initializing database: ", err);
-        process.exit(1);
-    });
+main().catch((err) => {
+  console.error('[Startup] Failed to start application:', err);
+  process.exit(1);
+});

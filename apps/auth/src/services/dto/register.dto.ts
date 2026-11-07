@@ -1,3 +1,5 @@
+import type { RegisterInput, RegisterOutput } from "../../validator/user.validator.js";
+
 const REGISTRATION_STATUSES = {
   PENDING: 'pending',
   ACTIVE: 'active',
@@ -8,21 +10,8 @@ const REGISTRATION_STATUSES = {
 
 export type RegistrationStatus = typeof REGISTRATION_STATUSES[keyof typeof REGISTRATION_STATUSES];
 
-export class ReqRegisterDto {
-  public username!: string;
-  public email!: string;
-  public password!: string;
-  public firstName!: string;
-  public lastName?: string;
-  public displayName?: string;
-  public locale?: string;
-  public timezone?: string;
-
-  constructor(partial: Partial<ReqRegisterDto>) {
-    Object.assign(this, partial);
-  }
-}
-
+export type ReqRegisterDto = RegisterOutput;
+export type RegisterInputDto = RegisterInput;
 export type RegisterDto = ReqRegisterDto;
 
 export class ResRegisterDto {

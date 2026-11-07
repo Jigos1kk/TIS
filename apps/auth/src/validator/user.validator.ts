@@ -1,6 +1,8 @@
 import { z } from "zod";
+import crypto from "node:crypto";
+import { hashPassword } from "../common/utils/password.util.js";
 
-export const createUserSchema = z.object({
+export const registerSchema = z.object({
     firstName: z.string({
         error: 'First Name is required',
     })
@@ -44,6 +46,21 @@ export const createUserSchema = z.object({
         .max(50, 'Timezone is too long')
         .default('Europe/Moscow')
         .optional(),
+}).transform(async (data) => {
+    const { hash, salt } = await hashPassword(data.password);
+    const sub = crypto.randomUUID();
+    return {
+        sub,
+        passwordHash: hash,
+        salt,
+        ...data,
+        emailNormalize: data.email.toLocaleUpperCase(), 
+        usernameNormalize: data.username.toLocaleUpperCase(),
+        displayName: `${data.firstName}${data.lastName ? ` ${data.lastName}` : ""}`.trim(),
+        isActive: true,
+        isEmailVerified: false
+    };
 });
 
-export type CreateUserInput = z.infer<typeof createUserSchema>;
+export type RegisterInput = z.input<typeof registerSchema>;
+export type RegisterOutput = z.output<typeof registerSchema>;

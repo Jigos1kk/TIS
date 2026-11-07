@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { userService, UserService } from "../services/user.service.js";
 import { ReqRegisterDto } from "../services/dto/register.dto.js";
+import { userRepository } from "../database/repository/index.js";
 
 export class AuthController {
   constructor(private userServiceInstance: UserService = userService) {}
